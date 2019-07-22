@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="322.283" Width="512" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated" Activated="Window_Activated">
     <Grid>
-        <TextBox x:Name="TextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" FontSize="26" FontWeight="Bold" PreviewKeyDown="TextBox_PreviewKeyDown" FontFamily="Wide Latin" Margin="0,0,0,286"/>
+        <TextBox x:Name="TextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" FontSize="26" FontWeight="Bold" PreviewKeyDown="TextBox_PreviewKeyDown" FontFamily="Wide Latin" Margin="0,0,38,286"/>
         <ListBox x:Name="ListBox" PreviewKeyDown="ListBox_PreviewKeyDown" Margin="0,36,0,0"/>
     </Grid>
 
