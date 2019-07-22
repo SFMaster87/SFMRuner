@@ -157,5 +157,10 @@ namespace SFMRuner
         {
             TextBox.Focus();
         }
+
+        private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            startApp();
+        }
     }
 }
