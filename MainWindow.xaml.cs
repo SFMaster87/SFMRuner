@@ -13,7 +13,7 @@ using Image = System.Windows.Controls.Image;
 
 
 
-namespace WpfApp1
+namespace SFMRuner
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml

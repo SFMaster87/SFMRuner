@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
-namespace WpfApp1
+namespace SFMRuner
 {
     /// <summary>
     /// Класс представляющий список найденных файлов и осуществляющий поиск этих файлов

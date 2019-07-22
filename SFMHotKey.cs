@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using gma.System.Windows;
 
-namespace WpfApp1
+namespace SFMRuner
 {
     class SFMHotKey
     {        
