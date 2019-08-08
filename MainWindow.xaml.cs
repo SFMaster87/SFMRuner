@@ -30,6 +30,7 @@ namespace SFMRuner
             new SFMNotifyIconClass(this);
             new SFMHotKey(this);
             InitializeComponent();
+            this.ShowActivated = true;
             //this.Hide();            
         }
                               
@@ -109,14 +110,10 @@ namespace SFMRuner
         {
             if (e.Key == Key.Up)
             {
-                //if(ListBox.SelectedIndex > 0)
-                //    ListBox.SelectedIndex = ListBox.SelectedIndex - 1;    
                 ListBox.Focus();
             }
             else if (e.Key == Key.Down)
             {
-                //if (ListBox.SelectedIndex < ListBox.Items.Count)
-                //    ListBox.SelectedIndex = ListBox.SelectedIndex + 1;                
                 ListBox.Focus();
             }
             else if (e.Key == Key.Enter)
@@ -154,8 +151,8 @@ namespace SFMRuner
         }
 
         private void Window_Activated(object sender, EventArgs e)
-        {
-            TextBox.Focus();
+        {            
+            this.TextBox.Focus();
         }
 
         private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -5,11 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SFMRuner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="322.283" Width="512" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated" Activated="Window_Activated">
+        Title="MainWindow" Height="478.283" Width="512" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated" Activated="Window_Activated">
+    
     <Grid>
-        <TextBox x:Name="TextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" FontSize="26" FontWeight="Bold" PreviewKeyDown="TextBox_PreviewKeyDown" FontFamily="Wide Latin" Margin="0,0,0,286"/>
-        <Image Margin="480,5,5,291" Source="repair-tools.png" Stretch="Fill"/>
+        <TextBox x:Name="TextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" FontSize="26" FontWeight="Bold" PreviewKeyDown="TextBox_PreviewKeyDown" FontFamily="Wide Latin" Margin="0,0,0,442"/>
         <ListBox x:Name="ListBox" PreviewKeyDown="ListBox_PreviewKeyDown" Margin="0,36,0,0" MouseDoubleClick="ListBox_MouseDoubleClick"/>
+        <Button Margin="478,3,3,0" BorderBrush="Black" Foreground="White" Height="30" VerticalAlignment="Top">
+            <Button.Background>
+                <ImageBrush ImageSource="repair-tools.png"/>                                
+            </Button.Background>            
+        </Button>
     </Grid>
-
+    
 </Window>
+
