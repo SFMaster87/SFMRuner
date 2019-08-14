@@ -62,6 +62,8 @@ namespace SFMRuner
             {
                 _mainWindow.Activate();
             }
+
+            
         }
     }
 }
