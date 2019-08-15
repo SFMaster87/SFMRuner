@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SFMRuner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="478.283" Width="512" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated" Activated="Window_Activated">
+        Title="MainWindow" Height="478.283" Width="512" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated" Activated="Window_Activated" Closed="MainWindow1_Closed">
     
     <Grid>
         <TextBox x:Name="TextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" FontSize="26" FontWeight="Bold" PreviewKeyDown="TextBox_PreviewKeyDown" FontFamily="Wide Latin" Margin="0,0,0,442"/>

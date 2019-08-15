@@ -9,7 +9,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Image = System.Windows.Controls.Image;
-
+using System.Windows.Input;
+using GlobalHotKey;
 
 
 namespace SFMRuner
@@ -19,21 +20,41 @@ namespace SFMRuner
     /// </summary>
        
     public partial class MainWindow : Window
-    {           
+    {
+        // Create the hotkey manager.
+        private HotKeyManager hotKeyManager = new HotKeyManager();
+
         private List<FileInfo> _fileListFullPath = new List<FileInfo>();
         private SFMFileList sfm_obj;
         
         public MainWindow()
         {            
+            InitializeComponent();
 
             sfm_obj = new SFMFileList();
             new SFMNotifyIconClass(this);
-            new SFMHotKey(this);
-            InitializeComponent();
+            //new SFMHotKey(this);
+
             this.ShowActivated = true;
             //this.Hide();            
+
+            // Register Ctrl+Alt+F5 hotkey. Save this variable somewhere for the further unregistering.
+            var hotKey = hotKeyManager.Register(Key.Space, /*ModifierKeys.Control |*/ ModifierKeys.Alt);
+
+            // Handle hotkey presses.
+            hotKeyManager.KeyPressed += HotKeyManagerPressed;
         }
-                              
+
+        private void HotKeyManagerPressed(object sender, KeyPressedEventArgs e)
+        {
+            if (e.HotKey.Key == Key.Space)
+            {
+                this.Show();
+                this.Activate();
+            }
+                
+        }
+
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ListBox.Items.Clear();
@@ -158,6 +179,12 @@ namespace SFMRuner
         private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             startApp();
+        }
+
+        private void MainWindow1_Closed(object sender, EventArgs e)
+        {
+            // Dispose the hotkey manager.
+            hotKeyManager.Dispose();
         }
     }
 }
