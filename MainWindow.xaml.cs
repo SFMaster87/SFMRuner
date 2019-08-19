@@ -25,24 +25,26 @@ namespace SFMRuner
         private HotKeyManager hotKeyManager = new HotKeyManager();
 
         private List<FileInfo> _fileListFullPath = new List<FileInfo>();
-        private SFMFileList sfm_obj;
+        //private SFMFileList sfm_obj;
+        private SFMSearch _searchObj;
         
         public MainWindow()
         {            
             InitializeComponent();
 
-            sfm_obj = new SFMFileList();
+            //sfm_obj = new SFMFileList();
+            _searchObj = new SFMSearch(this);
+            
             new SFMNotifyIconClass(this);
-            //new SFMHotKey(this);
-
+            
             this.ShowActivated = true;
             //this.Hide();            
 
             // Register Ctrl+Alt+F5 hotkey. Save this variable somewhere for the further unregistering.
             var hotKey = hotKeyManager.Register(Key.Space, /*ModifierKeys.Control |*/ ModifierKeys.Alt);
-
             // Handle hotkey presses.
             hotKeyManager.KeyPressed += HotKeyManagerPressed;
+
         }
 
         private void HotKeyManagerPressed(object sender, KeyPressedEventArgs e)
@@ -58,35 +60,10 @@ namespace SFMRuner
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ListBox.Items.Clear();
-            _fileListFullPath.Clear();
-
-            string searchingLine = TextBox.Text;
-            sfm_obj.SearchLineInGlobalFileList(searchingLine);
-
-            foreach (var file in sfm_obj.listOfFound)
-            {
-                _fileListFullPath.Add(file);
-
-                StackPanel sp = new StackPanel();
-                
-
-                Image img = new Image();
-                img.Width = 40;
-                img.Height = 40;
-                Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(file.FullName);
-                using (Bitmap bmp = icon.ToBitmap())
-                {
-                    var stream = new MemoryStream();
-                    bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                    img.Source = BitmapFrame.Create(stream);
-                }
-                
-                sp = CreateItemListBox(file.Name, file.FullName, img, file.LastWriteTime);
-                ListBox.Items.Add(sp);
-            }
-
+            _searchObj.SearchLine = TextBox.Text;
+            _searchObj.RunSearch(TextBox.Text);
         }
-
+        /*
         private StackPanel CreateItemListBox(string fileName, string fullFileName, Image icon, DateTime dateTimeWritefile)
         {
             StackPanel mainStackPanel = new StackPanel();
@@ -105,8 +82,7 @@ namespace SFMRuner
 
             labelFilePath.Padding = new Thickness(10,0,0,0);
             labelFileDateTime.Padding = new Thickness(10, 0, 0, 0);
-
-
+            
             textBlockFileName.FontSize = 20;
             labelFilePath.FontSize = 14;
             labelFileDateTime.FontSize = 14;
@@ -114,8 +90,7 @@ namespace SFMRuner
             textBlockFileName.Text = fileName;
             labelFilePath.Content = "Путь: " + fullFileName;
             labelFileDateTime.Content = "Дата изменения: " + dateTimeWritefile;
-
-
+            
             subStackPanel.Children.Add(textBlockFileName);
             subStackPanel.Children.Add(labelFilePath);
             subStackPanel.Children.Add(labelFileDateTime);
@@ -123,10 +98,9 @@ namespace SFMRuner
             mainStackPanel.Children.Add(icon);
             mainStackPanel.Children.Add(subStackPanel);
             
-
             return mainStackPanel;
         }
-
+        */
         private void TextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Up)
@@ -145,7 +119,6 @@ namespace SFMRuner
             {
                 this.Hide();
             }
-
         }
 
         private void startApp()
@@ -172,7 +145,8 @@ namespace SFMRuner
         }
 
         private void Window_Activated(object sender, EventArgs e)
-        {            
+        {
+            this.TextBox.Text = "";
             this.TextBox.Focus();
         }
 

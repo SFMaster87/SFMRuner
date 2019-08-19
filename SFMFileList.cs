@@ -23,11 +23,24 @@ namespace SFMRuner
 
         public SFMFileList()
         {
+            //загружаем стандартные пути для поиска 
+            AddDefaultFolders();
             //загружаем пути для поиска
             ReadPathsList();
             //MakeGlobalFilesList(SearchOnlyFiles);
             MakeGlobalFilesList(SearchDirectoriesAndFiles);
         }
+
+        private void AddDefaultFolders()
+        {
+            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory));            
+            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonDesktopDirectory));
+            
+            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.StartMenu));
+            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonStartMenu));
+            
+        }
+
 
         /*читаем из FilePaths.txt пути для поиска файлов*/
         private void ReadPathsList()
@@ -67,28 +80,34 @@ namespace SFMRuner
         }
 
         private void SearchDirectoriesAndFiles()
-        {
-            Queue<string> qDirs = new Queue<string>();
-
+        {            
+            Queue<string> qDirs = new Queue<string>();            
             foreach (var path in _pathsList)
             {
                 qDirs.Enqueue(path);
                 do
                 {
                     DirectoryInfo dir = new DirectoryInfo(qDirs.Dequeue());
+                    
                     if (dir.Exists)
                     {
-                        foreach (var itemFile in dir.GetFiles())
+                        try
                         {
-                            if (itemFile.Extension == ".exe" || itemFile.Extension == ".lnk")
+                            foreach (var itemFile in dir.GetFiles())
                             {
-                                _globalFileList.Add(itemFile);
+                                if (itemFile.Extension == ".exe" || itemFile.Extension == ".lnk")
+                                {
+                                    _globalFileList.Add(itemFile);
+                                }
+                            }
+                            foreach (var itemDir in dir.GetDirectories())
+                            {
+                                qDirs.Enqueue(itemDir.FullName);
                             }
                         }
-
-                        foreach (var itemDir in dir.GetDirectories())
+                        catch (UnauthorizedAccessException)
                         {
-                            qDirs.Enqueue(itemDir.FullName);
+                            continue;
                         }
                     }                    
                 }
