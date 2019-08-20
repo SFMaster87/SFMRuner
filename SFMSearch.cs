@@ -34,13 +34,14 @@ namespace SFMRuner
         {
             this._mainWindowHandler = mainWindowHandler;
             AddDefaultFolders();    //добавляем стандартные пути            
-            CreateThreads();        //создаем потоки для поиска            
+            //CreateThreads();        //создаем потоки для поиска            
 
         }
 
         public void RunSearch(string searchLine)
         {
             _searchLine = searchLine;
+            CreateThreads();
             RunThreads();           //запускаем потоки
 
         }
@@ -56,7 +57,7 @@ namespace SFMRuner
         }
 
         private void RunThreads()
-        {
+        {            
             for (int i = 0; i < _pathsList.Count; i++)
             {                
                 massSearchThread[i].Start(_pathsList[i]);
