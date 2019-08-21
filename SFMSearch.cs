@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Image = System.Windows.Controls.Image;
 
 namespace SFMRuner
@@ -22,13 +18,12 @@ namespace SFMRuner
         //private List<FileInfo> _globalFileList = new List<FileInfo>(); //лист путей для поиска
         public Queue<FileInfo> globalListOfFound = new Queue<FileInfo>(); //лист найденных
         private MainWindow _mainWindowHandler;
-
+        public static Dictionary<string, string> FileListDictionary = new Dictionary<string, string>();
 
         private string _searchLine;
         public string SearchLine { set => _searchLine = value;}
 
         private Thread[] massSearchThread;
-        private object listBoxLock = new object();
 
         public SFMSearch(MainWindow mainWindowHandler)
         {
@@ -41,9 +36,10 @@ namespace SFMRuner
         public void RunSearch(string searchLine)
         {
             _searchLine = searchLine;
+            FileListDictionary.Clear();
+
             CreateThreads();
             RunThreads();           //запускаем потоки
-
         }
 
         private void CreateThreads()
@@ -52,7 +48,6 @@ namespace SFMRuner
             for (int i = 0; i < massSearchThread.Length; i++)
             {
                 massSearchThread[i] = new Thread(new ParameterizedThreadStart(SearchFilesAndFolders));
-                //massSearchThread[i].SetApartmentState(ApartmentState.STA);
             }
         }
 
@@ -112,6 +107,7 @@ namespace SFMRuner
                 MatchCollection matches = regex.Matches(file.Name);
                 if (matches.Count > 0)
                 {
+                    //FileListDictionary.Add(file.Name, file.FullName);
                     Action action = () => _mainWindowHandler.ListBox.Items.Add(CreateBlockForListBox(file));
                     _mainWindowHandler.Dispatcher.BeginInvoke(action);
                 }
@@ -134,6 +130,7 @@ namespace SFMRuner
             }
 
             StackPanel subStackPanel = new StackPanel();
+            subStackPanel.Name = "subStackPanel";
             TextBlock textBlockFileName = new TextBlock();
             Label labelFilePath = new Label();
             Label labelFileDateTime = new Label();
@@ -154,6 +151,7 @@ namespace SFMRuner
             labelFileDateTime.FontSize = 14;
 
             textBlockFileName.Text = file.Name;
+            labelFilePath.Name = "filePathLabel";
             labelFilePath.Content = "Путь: " + file.FullName;
             labelFileDateTime.Content = "Дата изменения: " + file.LastWriteTime;
 
