@@ -132,12 +132,6 @@
     <Resource Include="close.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TrayImage.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\runer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="notify.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="repair-tools.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="fon.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

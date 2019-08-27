@@ -169,7 +169,9 @@ namespace SFMRuner
         private void AddDefaultFolders()
         {
             _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory));
+            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonDesktopDirectory));
             _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.StartMenu));
+            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonStartMenu));
 
         }
     }

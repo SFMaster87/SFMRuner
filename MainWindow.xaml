@@ -5,17 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SFMRuner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="478.283" Width="512" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated" Activated="Window_Activated" Closed="MainWindow1_Closed">
-    
-    <Grid>
-        <TextBox x:Name="TextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" FontSize="26" FontWeight="Bold" PreviewKeyDown="TextBox_PreviewKeyDown" FontFamily="Wide Latin" Margin="0,0,0,442"/>
-        <ListBox x:Name="ListBox" PreviewKeyDown="ListBox_PreviewKeyDown" Margin="0,36,0,0" MouseDoubleClick="ListBox_MouseDoubleClick"/>
-        <Button Margin="478,3,3,0" BorderBrush="Black" Foreground="White" Height="30" VerticalAlignment="Top">
-            <Button.Background>
-                <ImageBrush ImageSource="repair-tools.png"/>                                
-            </Button.Background>            
-        </Button>
-    </Grid>
-    
+        Title="MainWindow" Height="523.283" Width="512" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated" Activated="Window_Activated" Closed="MainWindow1_Closed" Background="#02FFFFFF" Foreground="#02000000" BorderBrush="#02000000">
+    <Border CornerRadius="20">
+        <Border.Background>
+            <ImageBrush ImageSource="fon.jpg"/>
+        </Border.Background>
+        <Grid Background="#02000000" Margin="21,0,0,10" Height="503" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="470">
+            <!--<Border Name="mask" CornerRadius="20">
+            <Border.Background>
+                <ImageBrush ImageSource="fon.jpg"/>
+            </Border.Background>
+        </Border>-->
+            <TextBox x:Name="TextBox" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" FontSize="26" FontWeight="Bold" PreviewKeyDown="TextBox_PreviewKeyDown" FontFamily="Wide Latin" Margin="0,19,0,449"/>
+            <ListBox x:Name="ListBox" PreviewKeyDown="ListBox_PreviewKeyDown" Margin="0,66,0,0" MouseDoubleClick="ListBox_MouseDoubleClick" HorizontalAlignment="Left" Width="470" Height="430" VerticalAlignment="Top"/>
+            <Button Margin="453,24,28,0" BorderBrush="Black" Foreground="White" Height="30" VerticalAlignment="Top">
+                <Button.Background>
+                    <ImageBrush ImageSource="repair-tools.png"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+    </Border>
 </Window>
 
