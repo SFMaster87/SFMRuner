@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using GlobalHotKey;
+using System.Windows.Media.Effects;
 
 
 namespace SFMRuner
@@ -23,22 +24,20 @@ namespace SFMRuner
         private List<FileInfo> _fileListFullPath = new List<FileInfo>();
         //private SFMFileList sfm_obj;
         private SFMSearch _searchObj;
-        
+
+        private GlobalFileList globalFileList;
+
         public MainWindow()
         {            
             InitializeComponent();
 
-            //sfm_obj = new SFMFileList();
-            _searchObj = new SFMSearch(this);
+            //_searchObj = new SFMSearch(this);
             
             new SFMNotifyIconClass(this);
             
             this.ShowActivated = true;
-            //this.Hide();            
-
-            // Register Ctrl+Alt+F5 hotkey. Save this variable somewhere for the further unregistering.
+            
             var hotKey = hotKeyManager.Register(Key.Space, /*ModifierKeys.Control |*/ ModifierKeys.Alt);
-            // Handle hotkey presses.
             hotKeyManager.KeyPressed += HotKeyManagerPressed;
 
         }
@@ -56,8 +55,10 @@ namespace SFMRuner
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ListBox.Items.Clear();
-            _searchObj.SearchLine = TextBox.Text;
-            _searchObj.RunSearch(TextBox.Text);
+            //_searchObj.SearchLine = TextBox.Text;
+            //_searchObj.RunSearch(TextBox.Text);
+            //List<FileInfo> per = globalFileList.GetGlobalFileList();
+            globalFileList.SearchLineInGlobalFileList(TextBox.Text);
         }
         
         private void TextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -127,6 +128,45 @@ namespace SFMRuner
         {
             // Dispose the hotkey manager.
             hotKeyManager.Dispose();
+        }
+
+        private void Image_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Image img = (Image)sender;
+            DropShadowEffect dropShadow = new DropShadowEffect();
+            img.Effect = dropShadow;
+        }
+
+        private void Image_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Image img = (Image)sender;
+            img.Effect = null;
+        }
+
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+
+        private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void MainWindow1_Initialized(object sender, EventArgs e)
+        {
+            globalFileList = new GlobalFileList(this);
+            while (true)
+            {
+                if (globalFileList.GetStatusInitGlobalFileList() == true)
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
     }
 }

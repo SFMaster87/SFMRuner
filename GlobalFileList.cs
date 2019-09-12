@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -11,61 +14,82 @@ using Image = System.Windows.Controls.Image;
 
 namespace SFMRuner
 {
-
-    class SFMSearch
+    class GlobalFileList
     {
-        private List<string> _pathsList = new List<string>(); //лист путей для поиска
-        public Queue<FileInfo> globalListOfFound = new Queue<FileInfo>(); //лист найденных
-        private MainWindow _mainWindowHandler;
-        public static Dictionary<string, string> FileListDictionary = new Dictionary<string, string>();
+        private Queue<string> pathsQueue = new Queue<string>(); //очередь путей для поиска
+        private Thread[] massiveThreads;
+        private List<FileInfo> globalFileList = new List<FileInfo>();
+        private MainWindow mainWindowHandler;
 
-        private List<FileInfo> fileList = new List<FileInfo>(); //лист путей для поиска
-
-        private string _searchLine;
-        public string SearchLine { set => _searchLine = value;}
-        
-        private Thread[] massSearchThread;
-
-        public SFMSearch(MainWindow mainWindowHandler)
+        public GlobalFileList(MainWindow mainWindowHandler)
         {
-            this._mainWindowHandler = mainWindowHandler;
-            AddDefaultFolders();    //добавляем стандартные пути            
-            //CreateThreads();        //создаем потоки для поиска            
+            this.mainWindowHandler = mainWindowHandler;
+
+            AddDefaultFolders();    //добавляем стандартные пути
+            CreateThreads();
+            RunThreads();           //запускаем потоки
 
         }
 
-        public void RunSearch(string searchLine)
+        public void refreshGlobalFileList() //обновить список файлов
         {
-            _searchLine = searchLine;
-            FileListDictionary.Clear();
-
+            globalFileList.Clear();
             CreateThreads();
             RunThreads();           //запускаем потоки
         }
 
+        public List<FileInfo> GetGlobalFileList() //получить список файлов
+        {
+            return globalFileList;
+        }
+
+        public bool GetStatusInitGlobalFileList()
+        {            
+            for (int i = 0; i < massiveThreads.Length; i++)
+            {
+                if (massiveThreads[i].IsAlive)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        
+        private void AddDefaultFolders() //добавить пути по умолчанию
+        {
+            pathsQueue.Enqueue(System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory));
+            pathsQueue.Enqueue(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonDesktopDirectory));
+            pathsQueue.Enqueue(System.Environment.GetFolderPath(System.Environment.SpecialFolder.StartMenu));
+            pathsQueue.Enqueue(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonStartMenu));
+
+        }
+
         private void CreateThreads()
         {
-            massSearchThread = new Thread[_pathsList.Count];
-            for (int i = 0; i < massSearchThread.Length; i++)
+            massiveThreads = new Thread[pathsQueue.Count];
+            for (int i = 0; i < massiveThreads.Length; i++)
             {
-                massSearchThread[i] = new Thread(new ParameterizedThreadStart(SearchFilesAndFolders));
+                massiveThreads[i] = new Thread(new ParameterizedThreadStart(SearchFilesAndFolders));
             }
         }
 
         private void RunThreads()
-        {            
-            for (int i = 0; i < _pathsList.Count; i++)
-            {                
-                massSearchThread[i].Start(_pathsList[i]);
+        {
+            for (int i = 0; i < pathsQueue.Count; i++)
+            {
+                massiveThreads[i].Start(pathsQueue.Dequeue());
             }
         }
 
-        //  точка входа потоков поиска
-        private void SearchFilesAndFolders(object searchPath)
+        private void SearchFilesAndFolders(object searchPath)  //формируем глобальный лист
         {
             string path = (string)searchPath;
             Queue<string> qDirs = new Queue<string>(); //очередь для папок и подпапок            
-            fileList.Clear();
 
             qDirs.Enqueue(path);
             do
@@ -80,7 +104,7 @@ namespace SFMRuner
                         {
                             if (itemFile.Extension == ".exe" || itemFile.Extension == ".lnk")
                             {
-                                fileList.Add(itemFile);
+                                globalFileList.Add(itemFile);
                             }
                         }
                         foreach (var itemDir in dir.GetDirectories())
@@ -95,21 +119,19 @@ namespace SFMRuner
                 }
             }
             while (qDirs.Count > 0);
-
-            SearchLineInFileList(fileList);
         }
 
-        private void SearchLineInFileList(List<FileInfo> fileList)
+        public void SearchLineInGlobalFileList(string searchLine)
         {
-            string sl = @"\w*" + _searchLine + @"\w*";
+            string sl = @"\w*" + searchLine + @"\w*";
             Regex regex = new Regex(sl, RegexOptions.IgnoreCase);
-            foreach (var file in fileList)
+            foreach (var file in globalFileList)
             {
                 MatchCollection matches = regex.Matches(file.Name);
                 if (matches.Count > 0)
-                {                    
-                    Action action = () => _mainWindowHandler.ListBox.Items.Add(CreateBlockForListBox(file));
-                    _mainWindowHandler.Dispatcher.BeginInvoke(action);
+                {
+                    Action action = () => mainWindowHandler.ListBox.Items.Add(CreateBlockForListBox(file));
+                    mainWindowHandler.Dispatcher.BeginInvoke(action);
                 }
             }
         }
@@ -163,15 +185,6 @@ namespace SFMRuner
             mainStackPanel.Children.Add(subStackPanel);
 
             return mainStackPanel;
-            
-        }
-        
-        private void AddDefaultFolders()
-        {
-            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory));
-            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonDesktopDirectory));
-            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.StartMenu));
-            _pathsList.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonStartMenu));
 
         }
     }
