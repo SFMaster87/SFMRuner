@@ -31,7 +31,7 @@ namespace SFMRuner
 
         }
 
-        public void refreshGlobalFileList() //обновить список файлов
+        public void RefreshGlobalFileList() //обновить список файлов
         {
             globalFileList.Clear();
             CreateThreads();
@@ -83,6 +83,7 @@ namespace SFMRuner
             for (int i = 0; i < pathsQueue.Count; i++)
             {
                 massiveThreads[i].Start(pathsQueue.Dequeue());
+                massiveThreads[i].Join();
             }
         }
 
@@ -104,7 +105,10 @@ namespace SFMRuner
                         {
                             if (itemFile.Extension == ".exe" || itemFile.Extension == ".lnk")
                             {
-                                globalFileList.Add(itemFile);
+                                lock (globalFileList)
+                                {
+                                    globalFileList.Add(itemFile);
+                                }                                
                             }
                         }
                         foreach (var itemDir in dir.GetDirectories())
@@ -121,6 +125,10 @@ namespace SFMRuner
             while (qDirs.Count > 0);
         }
 
+        /// <summary>
+        /// Функция поиска заданной строки в глобальном списке файлов
+        /// </summary>
+        /// <param name="searchLine">Строка поиска</param>
         public void SearchLineInGlobalFileList(string searchLine)
         {
             string sl = @"\w*" + searchLine + @"\w*";
@@ -147,7 +155,7 @@ namespace SFMRuner
             using (Bitmap bmp = icon.ToBitmap())
             {
                 var stream = new MemoryStream();
-                bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png); 
                 img.Source = BitmapFrame.Create(stream);
             }
 

@@ -20,19 +20,12 @@ namespace SFMRuner
     {
         // Create the hotkey manager.
         private HotKeyManager hotKeyManager = new HotKeyManager();
-
-        private List<FileInfo> _fileListFullPath = new List<FileInfo>();
-        //private SFMFileList sfm_obj;
-        private SFMSearch _searchObj;
-
         private GlobalFileList globalFileList;
 
         public MainWindow()
         {            
             InitializeComponent();
-
-            //_searchObj = new SFMSearch(this);
-            
+  
             new SFMNotifyIconClass(this);
             
             this.ShowActivated = true;
@@ -54,10 +47,8 @@ namespace SFMRuner
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+
             ListBox.Items.Clear();
-            //_searchObj.SearchLine = TextBox.Text;
-            //_searchObj.RunSearch(TextBox.Text);
-            //List<FileInfo> per = globalFileList.GetGlobalFileList();
             globalFileList.SearchLineInGlobalFileList(TextBox.Text);
         }
         
@@ -143,16 +134,6 @@ namespace SFMRuner
             img.Effect = null;
         }
 
-        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
-        private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void MainWindow1_Initialized(object sender, EventArgs e)
         {
             globalFileList = new GlobalFileList(this);
@@ -167,6 +148,38 @@ namespace SFMRuner
                     break;
                 }
             }
+        }
+        
+        private void RefreshButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            globalFileList.RefreshGlobalFileList();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string textInTextBox = TextBox.Text;
+                if (textInTextBox.Length > 3)
+                {
+                    string cmdCommand = textInTextBox.Substring(4).Trim();
+                    switch (textInTextBox.Substring(0, 4))
+                    {
+                        case "cmd:":
+                            {                                
+                                Process.Start("cmd", "/k " + @cmdCommand);
+                                break;
+                            }
+                        case "url:":
+                            {
+                                System.Diagnostics.Process.Start(@"http://" + @cmdCommand);
+                                break;
+                            }    
+                    }
+                                        
+                }
+                
+            }            
         }
     }
 }

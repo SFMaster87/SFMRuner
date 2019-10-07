@@ -86,7 +86,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GlobalFileList.cs" />
-    <Compile Include="SFMSearch.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -96,7 +95,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SFMNotifyIconClass.cs" />
-    <Compile Include="SFMFileList.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
